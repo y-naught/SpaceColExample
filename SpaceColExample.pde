@@ -18,7 +18,7 @@ void draw(){
   t.show();
   t.grow();
   popMatrix();
-  //saveFrame("SpaceColinizationAlgorithm2-#####");
+  saveFrame("SpaceColinizationAlgorithm2-#####");
 }
 
 
@@ -155,9 +155,11 @@ class Tree{
  
  
  void show(){
+   /*
   for(int i = 0; i < leaves.length; i ++){
    leaves[i].display();
   }
+  */
   for(int i = 0; i < branches.size(); i++){
     Branch br = branches.get(i);
     br.display(); 
