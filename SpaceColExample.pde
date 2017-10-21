@@ -12,9 +12,13 @@ void setup(){
 
 void draw(){
   background(0);
+  pushMatrix();
+  rotate(PI);
+  translate(-width, - height);
   t.show();
   t.grow();
-  saveFrame("SpaceColinizationAlgorithm2-#####");
+  popMatrix();
+  //saveFrame("SpaceColinizationAlgorithm2-#####");
 }
 
 
@@ -24,9 +28,36 @@ class Leaf{
   boolean reached = false;
   double num1;
   double num2;
+  float spread;
+  
   Leaf(){
-    num1 = 700 * rando.nextGaussian() + width / 2;
-    num2 = 500 * rando.nextGaussian() + height / 2;
+    spread = 100;
+    
+    num2 = spread * rando.nextGaussian() + height / 2;
+
+    float yRange = (height / 2 + spread) - (height / 2 - spread); //400
+    if(map((float)num2, height / 2 - yRange / 2, height / 2 + yRange/2, 0, yRange) < 1 * yRange / 6){
+      float std;
+      std = map(log10(abs((float)num2)), 0, 3, 0, 1.0);
+      //println(std);
+      num1 = std * spread * rando.nextGaussian() + width / 2;
+    }
+    else if(map((float)num2, height / 2 - yRange / 2, height / 2 + yRange/2, 0, yRange) >= 1 * yRange / 6 && map((float)num2, height / 2 - yRange / 2, height / 2 + yRange/2, 0, yRange) < 5 * yRange / 6){
+      float std;
+      std = pow((float)num2, 1 / 3.0);
+      std = map(std, 1, 33, 1, 4);
+      //println(std);
+      num1 = std * spread * rando.nextGaussian() + width / 2;
+    }
+    
+    else if(map((float)num2, height / 2 - yRange / 2, height / 2 + yRange/2, 0, yRange) >= 5 * yRange / 6){
+      float std;
+      std = -pow((float)num2, 2) + 4;
+      std = map(std,0, pow(yRange, 2) , 0.125, 0);
+      println(std);
+      num1 = std * spread * rando.nextGaussian() + width / 2;
+    }
+    
     location = new PVector((float)num1, (float)num2);
   }
   
@@ -50,8 +81,8 @@ class Tree{
 
  
  Tree(int c){
-   rootPos = new PVector(width / 2, height / 2);
-   PVector dir = new PVector(10, 0);
+   rootPos = new PVector(width / 2, 0);
+   PVector dir = new PVector(0, 10);
    root = new Branch(rootPos.x, rootPos.y, rootPos.x, rootPos.y, dir);
    branches.add(root);
    
@@ -158,4 +189,8 @@ class Branch{
    stroke(255, 150);
   line(ParentPos.x, ParentPos.y, location.x, location.y); 
  }
+}
+
+float log10(float x){
+  return log(x) / log(10);
 }
